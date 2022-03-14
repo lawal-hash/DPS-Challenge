@@ -1,0 +1,6 @@
+matplotlib == 3.2.2
+pandas
+numpy
+datetime
+seaborn
+statsmodels

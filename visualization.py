@@ -49,9 +49,16 @@ def visualization(dataset, category_accident_type_names, category_name, axs):
     :param axs:
     :return: None
     """
-    for name in category_accident_type_names[category_name]:
-        df = dataset[category_name][name]
-        sns.lineplot(data=df, x='MONAT', y='WERT', ax=axs, legend='auto', label=f'{name}')
+    for accident_type_name in category_accident_type_names[category_name]:
+        df = dataset[category_name][accident_type_name]
+        sns.lineplot(data=df, x='MONAT', y='WERT', ax=axs, legend='auto', label=f'{accident_type_name}')
         axs.set(xlabel='TIME', ylabel='WERT')
         axs.set_title(f'{category_name}')
         axs.legend()
+
+
+def save_sub_dataset(dataset, category_accident_type_names, category_name):
+    for accident_type_name in category_accident_type_names[category_name]:
+        if category_name == 'Alkoholunfälle' and accident_type_name == 'insgesamt' :
+            df_name = dataset[category_name][accident_type_name]
+            df_name.to_csv(f'{category_name}_{accident_type_name}.csv', index=False)

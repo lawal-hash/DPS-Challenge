@@ -9,7 +9,7 @@ def preprocess_dataset(path):
     param path: string
     referencing the location of the Monatszahlen Verkehrsunfälle dataset
     :return: tuple
-    dataframe and unique categories in MONATSZAHL
+    dataframe and unique categories in MONATSZAHL column
     """
     data = pd.read_csv(path, parse_dates=['MONAT'])
     data['MONAT'] = pd.to_datetime(data['MONAT'], errors='coerce', format='%Y%m')
@@ -20,7 +20,7 @@ def preprocess_dataset(path):
 
 def category(data, unique_category):
     """
-    Gets the different accident types in each categories
+    Get the different accident types in each categories
 
     :param data: dataframe
     :param unique_category: ndarray
@@ -42,12 +42,12 @@ def category(data, unique_category):
 
 def visualization(dataset, category_accident_type_names, category_name, axs):
     """
-
+        Plot  Accident Type per Category Name
     :param dataset: nested dictionary
-    :param category_accident_type_names:
-    :param category_name:
+    :param category_accident_type_names: dictionary
+    :param category_name: string
     :param axs:
-    :return:
+    :return: None
     """
     for name in category_accident_type_names[category_name]:
         df = dataset[category_name][name]

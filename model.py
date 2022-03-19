@@ -3,19 +3,9 @@ import statsmodels.api as sm
 from numpy.linalg import LinAlgError
 import warnings
 from sklearn.metrics import mean_squared_error
+from util import load_data
 
 warnings.filterwarnings("ignore")
-
-
-def load_data(path):
-    Alkoholunfalle_df = pd.read_csv(path, parse_dates=['MONAT'])
-    Alkoholunfalle_df['MONAT'] = pd.to_datetime(Alkoholunfalle_df['MONAT'], errors='coerce', format='%Y%m')
-    Alkoholunfalle_df = Alkoholunfalle_df.reindex(index=Alkoholunfalle_df.index[::-1])
-    Alkoholunfalle_df.reset_index(inplace=True, drop=True)
-    Alkoholunfalle_df = Alkoholunfalle_df.set_index(['MONAT'])
-    Alkoholunfalle_df.sort_index(ascending=True, inplace=True)
-    return Alkoholunfalle_df
-
 
 # Split dataset into 80% train and 20% test
 
@@ -38,7 +28,6 @@ time_series = arima_model.fit()
 
 test_results = {}
 trend = ['n', 'c', 't', 'ct']
-
 
 raise_error = 0
 counter = 0
@@ -63,12 +52,11 @@ for i in range(len(trend)):
 test_results_df = pd.DataFrame(test_results).T
 test_results_df.to_csv('hyperparameter_tuning.csv')
 
-
 # Selecting the best model parameters
 # Model with the least test error
 
 
 hyper_df = pd.read_csv('hyperparameter_tuning.csv')
-hyper_df.rename(columns={"Unnamed: 0": "p", "Unnamed: 1": "q", 'Unnamed: 2':'trend', '0':'test_error'}, inplace=True)
+hyper_df.rename(columns={"Unnamed: 0": "p", "Unnamed: 1": "q", 'Unnamed: 2': 'trend', '0': 'test_error'}, inplace=True)
 best_param = hyper_df[hyper_df['test_error'] == hyper_df['test_error'].min()]
 best_param.to_csv('best_model_parameter.csv', index=False)

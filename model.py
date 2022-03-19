@@ -2,6 +2,7 @@ import pandas as pd
 import statsmodels.api as sm
 from numpy.linalg import LinAlgError
 import warnings
+from sklearn.metrics import mean_squared_error
 
 warnings.filterwarnings("ignore")
 
@@ -38,26 +39,36 @@ time_series = arima_model.fit()
 test_results = {}
 trend = ['n', 'c', 't', 'ct']
 
+
+raise_error = 0
+counter = 0
 for i in range(len(trend)):
-    raise_error = 0
-    counter = 0
-    for p in range(10, 50, 5):
-        for q in range(0, 50, 10):
+    for p in range(0, 10):
+        for q in range(0, 10, 2):
             raise_error = 0
             try:
-                arima_model = sm.tsa.arima.ARIMA(data_df['WERT'], order=(p, 0, q), trend=trend[i])
+                arima_model = sm.tsa.arima.ARIMA(df_train['WERT'], seasonal_order=(p, 0, q, 12), trend=trend[i])
                 time_series = arima_model.fit()
+                y_pred = time_series.forecast(48)
+                test_error = mean_squared_error(df_valid['WERT'], y_pred)
             except ValueError:
                 raise_error += 1
             except LinAlgError:
                 raise_error += 1
             finally:
-                test_results[(p, q, trend[i])] = [time_series.bic, time_series.aic, raise_error]
+                test_results[(p, q, trend[i])] = [test_error]
                 counter += 1
                 print(counter)
 
 test_results_df = pd.DataFrame(test_results).T
 test_results_df.to_csv('hyperparameter_tuning.csv')
 
-# df = pd.read_csv("").T
-# print(df.head())
+
+# Selecting the best model parameters
+# Model with the least test error
+
+
+hyper_df = pd.read_csv('hyperparameter_tuning.csv')
+hyper_df.rename(columns={"Unnamed: 0": "p", "Unnamed: 1": "q", 'Unnamed: 2':'trend', '0':'test_error'}, inplace=True)
+best_param = hyper_df[hyper_df['test_error'] == hyper_df['test_error'].min()]
+best_param.to_csv('best_model_parameter.csv', index=False)

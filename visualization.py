@@ -58,6 +58,13 @@ def visualization(dataset, category_accident_type_names, category_name, axs):
 
 
 def save_sub_dataset(dataset, category_accident_type_names, category_name):
+    """
+
+    :param dataset:
+    :param category_accident_type_names:
+    :param category_name:
+    :return:
+    """
     for accident_type_name in category_accident_type_names[category_name]:
         if category_name == 'Alkoholunfälle' and accident_type_name == 'insgesamt' :
             df_name = dataset[category_name][accident_type_name]

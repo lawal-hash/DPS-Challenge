@@ -17,14 +17,15 @@ def fit_model():
     return time_series
 
 
-model = fit_model()
-print(model)
+#model = fit_model()
+#print(model)
 
 
 def get_forecast(year, month):
     forecast_date = str(year) + '-' + str(month) + '-' + '01'
     end_date = '2020-12-01'
-    forecast = model.predict(start=end_date, end=forecast_date)
+    #forecast = model.predict(start=end_date, end=forecast_date)
+    forecast = 0
     return forecast
 
 
@@ -42,7 +43,7 @@ def forecast_accident():
         # @TODO
         forecast = get_forecast(year, month)
         print(forecast)
-        forecast = forecast[-1]
+        #forecast = forecast[-1]
         return {'prediction': round(forecast,2)}
 
     except (NameError, ValueError) as ex:

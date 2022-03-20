@@ -44,7 +44,7 @@ def forecast_accident():
         forecast = get_forecast(year, month)
         print(forecast)
         #forecast = forecast[-1]
-        return {'prediction': round(forecast,2)}
+        return { } #{'prediction': round(forecast,2)}
 
     except (NameError, ValueError) as ex:
         return {'error': 'Invalid data'}

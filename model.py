@@ -60,3 +60,9 @@ hyper_df = pd.read_csv('hyperparameter_tuning.csv')
 hyper_df.rename(columns={"Unnamed: 0": "p", "Unnamed: 1": "q", 'Unnamed: 2': 'trend', '0': 'test_error'}, inplace=True)
 best_param = hyper_df[hyper_df['test_error'] == hyper_df['test_error'].min()]
 best_param.to_csv('best_model_parameter.csv', index=False)
+
+# Save fitted model
+
+arima_model = sm.tsa.arima.ARIMA(data_df['WERT'], seasonal_order=(5, 0, 6, 12), trend='c')
+time_series = arima_model.fit()
+time_series.save('forecast_model.pickle')
